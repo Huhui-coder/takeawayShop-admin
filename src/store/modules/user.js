@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, register } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -6,7 +6,8 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    merchantId: ''
   }
 }
 
@@ -22,6 +23,10 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_MERCHANT_ID: (state, id) => {
+    state.merchantId = id
+  },
+
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   }
@@ -30,12 +35,26 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { merchantName, merchantPwd } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      login({ merchantName: merchantName.trim(), merchantPwd: merchantPwd }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        commit('SET_MERCHANT_ID', data._id)
+        commit('SET_NAME', data.merchantName)
+        commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
+        // commit('SET_TOKEN', data.token)
+
+        // setToken(data.token)
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  register({ commit }, userInfo) {
+    const { merchantName, merchantPwd, merchantAddress, merchantPhone, merchantDesc } = userInfo
+    return new Promise((resolve, reject) => {
+      register({ merchantName: merchantName.trim(), merchantPwd: merchantPwd, merchantAddress, merchantPhone, merchantDesc }).then(response => {
         resolve()
       }).catch(error => {
         reject(error)
@@ -67,14 +86,16 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      commit('RESET_STATE')
+      resolve()
+      // logout(state.token).then(() => {
+      //   removeToken() // must remove  token  first
+      //   resetRouter()
+      //   commit('RESET_STATE')
+      //   resolve()
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   },
 
