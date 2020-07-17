@@ -15,7 +15,7 @@
         </el-table-column>
         <el-table-column label="用户信息">
           <template slot-scope="scope">
-            <span>{{ formateUserInfo(scope.row.userInfo) }}</span>
+            <span>{{ formateUserInfo(scope.row.userAddressInfo) }}</span>
           </template>
         </el-table-column>
         <el-table-column label="商品信息">
@@ -29,6 +29,7 @@
         <el-table-column label="订单状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status === 'ordered'">已下单</span>
+            <span v-else-if="scope.row.status === 'receiving'">已确认</span>
             <span v-else>已完成</span>
           </template>
         </el-table-column>
@@ -40,12 +41,12 @@
               size="mini"
               :disabled="scope.row.status === 'complete'"
               @click="put(scope.row._id)"
-            >订单已完成</el-button>
+            >确认订单</el-button>
             <el-button
               type="warning"
               plain
               size="mini"
-              @click="del(scope.row._id)"
+              @click="view(scope.row._id)"
             >查看详情</el-button>
           </template>
         </el-table-column>
@@ -57,7 +58,7 @@
       width="30%"
       :before-close="handleClose"
     >
-      <span>确定将订单状态设置为已完成吗？</span>
+      <span>确定将订单状态设置为已确认吗？</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="putDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="putConfirm()">确 定</el-button>
@@ -86,7 +87,7 @@ export default {
     this.fetch()
   },
   methods: {
-    formateUserInfo(userInfo) {
+    formateUserInfo(userAddressInfo) {
       const {
         userName,
         provinceName,
@@ -94,7 +95,7 @@ export default {
         countyName,
         detailInfo,
         telNumber
-      } = userInfo
+      } = userAddressInfo
       if (provinceName === cityName) { return `${userName}-${telNumber}-${cityName}-${countyName}-${detailInfo}` }
       return `${userName}-${telNumber}-${provinceName}-${cityName}-${countyName}-${detailInfo}`
     },
@@ -102,7 +103,7 @@ export default {
       this.current_oId = ''
     },
     putConfirm() {
-      const params = { o_id: this.current_oId, status: 'complete' }
+      const params = { o_id: this.current_oId, status: 'receiving' }
       this.$store
         .dispatch('order/put', params)
         .then(res => {
@@ -130,6 +131,9 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    view(id){
+      this.$router.push({ path: `/order/detail/${id}` })
     }
   }
 }

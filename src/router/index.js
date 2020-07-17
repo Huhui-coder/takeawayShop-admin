@@ -102,7 +102,15 @@ export const constantRoutes = [
         name: 'order',
         component: () => import('@/views/order/index'),
         meta: { title: '订单管理', icon: 'form' }
-      }
+      },
+      {
+        path: 'detail/:id',
+        name: 'orderDetail',
+        component: () => import('@/views/order/detail'),
+        meta: { title: '订单详情页', icon: 'form' },
+        hidden: true,
+        props: true
+      },
     ]
   },
 
@@ -175,7 +183,7 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
-
+  
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
@@ -183,7 +191,8 @@ export const constantRoutes = [
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes,
+  mode: 'history'
 })
 
 const router = createRouter()

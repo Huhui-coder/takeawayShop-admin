@@ -13,9 +13,8 @@ const mutations = {
 
 const actions = {
   fetch({ commit }, productInfo) {
-    const { _id } = productInfo
     return new Promise((resolve, reject) => {
-      viewAll({ _id: _id }).then(response => {
+      viewAll().then(response => {
         const { data } = response
         commit('FETCH', data)
         resolve()

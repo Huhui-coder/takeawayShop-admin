@@ -30,7 +30,7 @@ const actions = {
   view({ commit }, orderInfo) {
     const { o_id } = orderInfo
     return new Promise((resolve, reject) => {
-      view({ _id: o_id }).then(response => {
+      view({ o_id: o_id }).then(response => {
         const { data } = response
         commit('VIEW', data)
         resolve()

@@ -3,7 +3,7 @@
     <div class="btn-wrap">
       <el-button
         type="success"
-        @click="dialogFormVisible = true"
+        @click="add"
       >新增</el-button>
     </div>
     <div class="table-wrap">
@@ -21,6 +21,7 @@
         <el-table-column prop="price" label="价格" />
         <el-table-column prop="name" label="商品名称" />
         <el-table-column prop="desc" label="商品描述" />
+        <el-table-column prop="pType" label="商品分类" />
         <el-table-column label="商品状态">
           <template slot-scope="scope">
             <span v-if="scope.row.status === 'normal'">上架中</span>
@@ -95,6 +96,13 @@
         >
           <el-input v-model="form.desc" autocomplete="off" />
         </el-form-item>
+         <el-form-item
+          label="商品分类"
+          prop="pType"
+          :label-width="formLabelWidth"
+        >
+          <el-input v-model="form.pType" autocomplete="off" />
+        </el-form-item>
         <el-form-item
           label="商品状态"
           prop="status"
@@ -152,15 +160,20 @@ export default {
         name: '',
         desc: '',
         status: '',
-        url: ''
+        url: '',
+        pType: ''
       },
       rules: {
         price: [
           { required: true, message: '请输入商品价格', trigger: 'blur' },
-          { min: 1, max: 100, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 1, max: 100, message: '价格不能超过100', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' },
+          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请输入商品分类', trigger: 'blur' },
           { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
         ],
         desc: [
@@ -189,8 +202,8 @@ export default {
       this.dialogFormVisible = true
     },
     delConfirm() {
-      const { _id, current_pId } = this
-      const params = { _id, p_id: current_pId }
+      const { current_pId } = this
+      const params = { p_id: current_pId }
       this.$store
         .dispatch('product/del', params)
         .then(res => {
@@ -211,7 +224,7 @@ export default {
       this.current_pId = p_id
     },
     editStatus(p_id, status) {
-      const params = { _id: this._id, p_id: p_id, status }
+      const params = { p_id, status }
       this.$store
         .dispatch('product/statusProduct', params)
         .then(res => {
@@ -224,13 +237,16 @@ export default {
           this.loading = false
         })
     },
+    add(){
+      this.dialogFormVisible = true
+      this.actionType === '新增商品'
+    },
     submit(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.actionType === '新增商品') {
             this.submitLoading = true
-            const { form, _id } = this
-            form._id = _id
+            const { form } = this
             this.$store
               .dispatch('product/add', form)
               .then(async res => {
@@ -246,8 +262,8 @@ export default {
           } else {
             // 编辑商品
             this.submitLoading = true
-            const { form, _id, current_pId } = this
-            const params = { form, _id, p_id: current_pId }
+            const { form, current_pId } = this
+            const params = { form, p_id: current_pId }
             this.$store
               .dispatch('product/put', params)
               .then(async res => {
@@ -283,7 +299,7 @@ export default {
     fetch() {
       this.loading = true
       this.$store
-        .dispatch('product/fetch', { _id: this._id })
+        .dispatch('product/fetch')
         .then(() => {
           this.loading = false
         })
@@ -331,7 +347,7 @@ export default {
   width: 178px;
   height: 178px;
   line-height: 178px;
-  text-align: center;
+  text-align: center; 
 }
 .avatar {
   width: 178px;

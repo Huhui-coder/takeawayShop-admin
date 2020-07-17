@@ -6,8 +6,7 @@ const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: '',
-    merchantId: ''
+    avatar: ''
   }
 }
 
@@ -23,9 +22,6 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
-  SET_MERCHANT_ID: (state, id) => {
-    state.merchantId = id
-  },
 
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -38,13 +34,11 @@ const actions = {
     const { merchantName, merchantPwd } = userInfo
     return new Promise((resolve, reject) => {
       login({ merchantName: merchantName.trim(), merchantPwd: merchantPwd }).then(response => {
-        const { data } = response
-        commit('SET_MERCHANT_ID', data._id)
+        const { data, token} = response
         commit('SET_NAME', data.merchantName)
         commit('SET_AVATAR', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif')
-        // commit('SET_TOKEN', data.token)
-
-        // setToken(data.token)
+        commit('SET_TOKEN', `Bearer ${token}`)
+        setToken(`Bearer ${token}`)
         resolve()
       }).catch(error => {
         reject(error)
@@ -88,14 +82,14 @@ const actions = {
     return new Promise((resolve, reject) => {
       commit('RESET_STATE')
       resolve()
-      // logout(state.token).then(() => {
-      //   removeToken() // must remove  token  first
-      //   resetRouter()
-      //   commit('RESET_STATE')
-      //   resolve()
-      // }).catch(error => {
-      //   reject(error)
-      // })
+      logout(state.token).then(() => {
+        removeToken() // must remove  token  first
+        resetRouter()
+        commit('RESET_STATE')
+        resolve()
+      }).catch(error => {
+        reject(error)
+      })
     })
   },
 

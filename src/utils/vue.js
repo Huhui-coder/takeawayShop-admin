@@ -9,9 +9,6 @@ Vue.mixin({
     }
   },
   computed: {
-    ...mapState('user', {
-      _id: state => state.merchantId
-    })
   },
   methods: {
     formatTime(value, type = 'YYYY-MM-DD HH:mm:ss') {
