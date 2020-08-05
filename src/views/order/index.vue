@@ -132,7 +132,7 @@ export default {
           this.loading = false
         })
     },
-    view(id){
+    view(id) {
       this.$router.push({ path: `/order/detail/${id}` })
     }
   }

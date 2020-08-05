@@ -80,7 +80,7 @@
     >
       <el-form ref="ruleForm" :model="form" :rules="rules">
         <el-form-item label="价格" prop="price" :label-width="formLabelWidth">
-          <el-input v-model="form.price" autocomplete="off" />
+          <el-input v-model.number="form.price" autocomplete="off" />
         </el-form-item>
         <el-form-item
           label="商品名称"
@@ -96,7 +96,7 @@
         >
           <el-input v-model="form.desc" autocomplete="off" />
         </el-form-item>
-         <el-form-item
+        <el-form-item
           label="商品分类"
           prop="pType"
           :label-width="formLabelWidth"
@@ -165,12 +165,11 @@ export default {
       },
       rules: {
         price: [
-          { required: true, message: '请输入商品价格', trigger: 'blur' },
-          { min: 1, max: 100, message: '价格不能超过100', trigger: 'blur' }
+          { required: true, message: '请输入商品价格', trigger: 'blur' }
         ],
         name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+          { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }
         ],
         type: [
           { required: true, message: '请输入商品分类', trigger: 'blur' },
@@ -178,7 +177,7 @@ export default {
         ],
         desc: [
           { required: true, message: '请输入商品描述', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度在 1 到 10 个字符', trigger: 'blur' }
+          { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }
         ],
         status: [
           { required: true, message: '请选择商品状态', trigger: 'change' }
@@ -237,7 +236,7 @@ export default {
           this.loading = false
         })
     },
-    add(){
+    add() {
       this.dialogFormVisible = true
       this.actionType === '新增商品'
     },
@@ -347,7 +346,7 @@ export default {
   width: 178px;
   height: 178px;
   line-height: 178px;
-  text-align: center; 
+  text-align: center;
 }
 .avatar {
   width: 178px;

@@ -15,8 +15,8 @@ const actions = {
   fetch({ commit }, productInfo) {
     return new Promise((resolve, reject) => {
       viewAll().then(response => {
-        const { data } = response
-        commit('FETCH', data)
+        const product = response.data.product
+        commit('FETCH', product)
         resolve()
       }).catch(error => {
         reject(error)

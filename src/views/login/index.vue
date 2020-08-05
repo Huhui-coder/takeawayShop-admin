@@ -37,7 +37,7 @@
           @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon :icon-class="passwordType === 'merchantPwd' ? 'eye' : 'eye-open'" />
+          <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
 
@@ -68,15 +68,15 @@ export default {
     }
     return {
       loginForm: {
-        merchantName: 'test',
-        merchantPwd: 'test'
+        merchantName: 'huhuitest',
+        merchantPwd: 'huhuitest'
       },
       loginRules: {
         merchantName: [{ required: true, trigger: 'blur', validator: validateUsername }],
         merchantPwd: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       loading: false,
-      passwordType: 'merchantPwd',
+      passwordType: 'password',
       redirect: undefined
     }
   },
@@ -104,6 +104,7 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
+            console.log('login')
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {

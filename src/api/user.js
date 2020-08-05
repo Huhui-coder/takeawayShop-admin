@@ -18,15 +18,23 @@ export function register(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/merchant/info',
+    url: '/merchant/userInfo',
     method: 'get',
     params: { token }
   })
 }
 
-export function logout() {
+// export function logout() {
+//   return request({
+//     url: '/merchant/logout',
+//     method: 'post'
+//   })
+// }
+
+export function putUserInfo(data) {
   return request({
-    url: '/merchant/logout',
-    method: 'post'
+    url: '/merchant/userInfo',
+    method: 'put',
+    data
   })
 }

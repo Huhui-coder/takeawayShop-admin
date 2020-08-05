@@ -80,6 +80,18 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
+  {
+    path: '/userInfo',
+    component: Layout,
+    children: [
+      {
+        path: 'userInfo',
+        name: 'userInfo',
+        component: () => import('@/views/userInfo/index'),
+        meta: { title: '用户信息', icon: 'form' }
+      }
+    ]
+  },
 
   {
     path: '/product',
@@ -110,7 +122,7 @@ export const constantRoutes = [
         meta: { title: '订单详情页', icon: 'form' },
         hidden: true,
         props: true
-      },
+      }
     ]
   },
 
@@ -183,7 +195,7 @@ export const constantRoutes = [
   //     }
   //   ]
   // },
-  
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

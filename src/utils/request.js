@@ -34,7 +34,6 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   response => {
     const res = response.data
-    console.log('response', response)
     if (res.code !== 0) {
       Message({
         message: res.msg || 'Error',
@@ -47,17 +46,17 @@ service.interceptors.response.use(
     }
   },
   error => {
-    if(error?.response.status === 401) {
-        // to re-login
-        MessageBox.confirm('Token已过期，请重新登录', '确认退出', {
-          confirmButtonText: '确认退出',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.href = '/login'
-          })
+    if (error?.response.status === 401) {
+      // to re-login
+      MessageBox.confirm('Token已过期，请重新登录', '确认退出', {
+        confirmButtonText: '确认退出',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('user/resetToken').then(() => {
+          location.href = '/login'
         })
+      })
     }
     Message({
       message: error.message,
