@@ -49,7 +49,9 @@ export default {
     })
   },
   mounted() {
-    this.form = Object.assign(this.form, this.info)
+    let obj = {...this.info}
+    delete obj.product
+    this.form = Object.assign(this.form, obj)
   },
   methods: {
     async onSave() {
