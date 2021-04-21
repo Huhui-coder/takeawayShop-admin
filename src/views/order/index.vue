@@ -53,7 +53,7 @@
               size="mini"
               @click="view(scope.row._id)"
             >查看详情</el-button>
-             <el-button
+            <el-button
               type="warning"
               plain
               size="mini"
