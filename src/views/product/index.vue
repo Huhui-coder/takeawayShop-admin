@@ -1,10 +1,7 @@
 <template>
   <div v-loading="loading" class="container">
     <div class="btn-wrap">
-      <el-button
-        type="success"
-        @click="add"
-      >新增</el-button>
+      <el-button type="success" @click="add">新增</el-button>
     </div>
     <div class="table-wrap">
       <el-table
@@ -117,7 +114,8 @@
           <el-upload
             class="avatar-uploader"
             name="recfile"
-            action="http://127.0.0.1:3000/upload/single"
+            action
+            :http-request="Upload"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
@@ -141,7 +139,7 @@
 
 <script>
 import { mapState } from 'vuex'
-
+import { client, getFileNameUUID } from '@/utils/ali-oss'
 export default {
   data() {
     return {
@@ -164,12 +162,15 @@ export default {
         pType: ''
       },
       rules: {
-        price: [
-          { required: true, message: '请输入商品价格', trigger: 'blur' }
-        ],
+        price: [{ required: true, message: '请输入商品价格', trigger: 'blur' }],
         name: [
           { required: true, message: '请输入商品名称', trigger: 'blur' },
-          { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }
+          {
+            min: 1,
+            max: 200,
+            message: '长度在 1 到 200 个字符',
+            trigger: 'blur'
+          }
         ],
         type: [
           { required: true, message: '请输入商品分类', trigger: 'blur' },
@@ -177,7 +178,12 @@ export default {
         ],
         desc: [
           { required: true, message: '请输入商品描述', trigger: 'blur' },
-          { min: 1, max: 200, message: '长度在 1 到 200 个字符', trigger: 'blur' }
+          {
+            min: 1,
+            max: 200,
+            message: '长度在 1 到 200 个字符',
+            trigger: 'blur'
+          }
         ],
         status: [
           { required: true, message: '请选择商品状态', trigger: 'change' }
@@ -306,9 +312,37 @@ export default {
           this.loading = false
         })
     },
+    // http-request属性来覆盖默认的上传行为（即action="url"），自定义上传的实现
+    Upload(file) {
+      const that = this
+      async function multipartUpload() {
+        const temporary = file.file.name.lastIndexOf('.')
+        const fileNameLength = file.file.name.length
+        const fileFormat = file.file.name.substring(
+          temporary + 1,
+          fileNameLength
+        )
+        const fileName = getFileNameUUID() + '.' + fileFormat
+        client(that.dataObj)
+          .multipartUpload(`image/${fileName}`, file.file)
+          .then(result => {
+            // 上传成功返回值，可针对项目需求写其他逻辑
+            console.log(result)
+            that.form.url = result.res.requestUrls[0]
+            if (that.form.url.includes('uploadId')) {
+              that.form.url = result.res.requestUrls[0].split('?')[0]
+            }
+          })
+          .catch(err => {
+            console.log('err:', err)
+          })
+      }
+      multipartUpload()
+    },
     handleAvatarSuccess(res, file) {
       // this.url = URL.createObjectURL(file.raw);
-      this.form.url = `${this.baseURL}/${res.path.split('/')[1]}`
+      // this.form.url = `${this.baseURL}/${res.path.split('/')[1]}`
+      console.log('file', file)
     },
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2

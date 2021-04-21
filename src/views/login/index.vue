@@ -68,8 +68,8 @@ export default {
     }
     return {
       loginForm: {
-        merchantName: 'huhuitest',
-        merchantPwd: 'huhuitest'
+        merchantName: '',
+        merchantPwd: ''
       },
       loginRules: {
         merchantName: [{ required: true, trigger: 'blur', validator: validateUsername }],

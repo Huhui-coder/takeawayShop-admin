@@ -18,6 +18,11 @@
             <span>{{ formateUserInfo(scope.row.userAddressInfo) }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="点餐类型">
+          <template slot-scope="scope">
+            <span>{{ formateorderTypeInfo(scope.row.orderType) }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="商品信息">
           <template slot-scope="scope">
             <span v-for="item in scope.row.product" :key="item._id">
@@ -33,7 +38,7 @@
             <span v-else>已完成</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="280">
+        <el-table-column label="操作" width="380">
           <template slot-scope="scope">
             <el-button
               type="primary"
@@ -48,6 +53,12 @@
               size="mini"
               @click="view(scope.row._id)"
             >查看详情</el-button>
+             <el-button
+              type="warning"
+              plain
+              size="mini"
+              @click="attend(scope.row.userAddressInfo.telNumber)"
+            >提醒用户取餐</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -87,17 +98,27 @@ export default {
     this.fetch()
   },
   methods: {
+    formateorderTypeInfo(data) {
+      const mapper = {
+        takeAway: '外送',
+        selfTake: '自提',
+        dine: '堂食'
+      }
+      return mapper[data]
+    },
     formateUserInfo(userAddressInfo) {
-      const {
-        userName,
-        provinceName,
-        cityName,
-        countyName,
-        detailInfo,
-        telNumber
-      } = userAddressInfo
-      if (provinceName === cityName) { return `${userName}-${telNumber}-${cityName}-${countyName}-${detailInfo}` }
-      return `${userName}-${telNumber}-${provinceName}-${cityName}-${countyName}-${detailInfo}`
+      if (userAddressInfo) {
+        const {
+          userName,
+          provinceName,
+          cityName,
+          countyName,
+          detailInfo,
+          telNumber
+        } = userAddressInfo
+        if (provinceName === cityName) { return `${userName}-${telNumber}-${cityName}-${countyName}-${detailInfo}` }
+        return `${userName}-${telNumber}-${provinceName}-${cityName}-${countyName}-${detailInfo}`
+      }
     },
     handleClose() {
       this.current_oId = ''
@@ -134,6 +155,17 @@ export default {
     },
     view(id) {
       this.$router.push({ path: `/order/detail/${id}` })
+    },
+    attend(phone) {
+      console.log(phone)
+      this.$store
+        .dispatch('order/attend', { phone: phone })
+        .then(() => {
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
     }
   }
 }

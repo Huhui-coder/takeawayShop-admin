@@ -123,11 +123,11 @@ export default {
     }
     return {
       registerForm: {
-        merchantName: 'huhuitest',
-        merchantPwd: 'huhuitest',
-        merchantAddress: 'huhuitest',
-        merchantPhone: 'huhuitest',
-        merchantDesc: 'huhuitest'
+        merchantName: 'beikehanbao',
+        merchantPwd: 'beikehanbao1001',
+        merchantAddress: '重庆市第二师范学院',
+        merchantPhone: '15823721618',
+        merchantDesc: '专注于汉堡'
       },
       registerRules: {
         merchantName: [

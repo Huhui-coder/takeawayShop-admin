@@ -2,10 +2,10 @@
   <div v-loading="loading" class="container">
     <div class="title">
       <p>
-        订单类型: <span>{{ order === 'selfTake' ? '自取': '外送' }} </span>
+        订单类型: <span>{{ orderTypeInfo(order.orderType) }} </span>
       </p>
     </div>
-    <div class="title">
+    <div v-if="order.userAddressInfo" class="title">
       <p>
         顾客信息: <span>{{ userInfo(order.userAddressInfo) }} </span>
       </p>
@@ -80,6 +80,14 @@ export default {
         .catch(() => {
           this.loading = false
         })
+    },
+    orderTypeInfo(data) {
+      const mapper = {
+        takeAway: '外送',
+        selfTake: '自提',
+        dine: '堂食'
+      }
+      return mapper[data]
     },
     userInfo(value) {
       return Object.values(value)
