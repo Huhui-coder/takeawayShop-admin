@@ -57,7 +57,7 @@
               type="warning"
               plain
               size="mini"
-              @click="attend(scope.row.userAddressInfo.telNumber)"
+              @click="attend()"
             >提醒用户取餐</el-button>
           </template>
         </el-table-column>
@@ -156,10 +156,10 @@ export default {
     view(id) {
       this.$router.push({ path: `/order/detail/${id}` })
     },
-    attend(phone) {
-      console.log(phone)
+    attend() {
+      let email = '3326743005@qq.com'
       this.$store
-        .dispatch('order/attend', { phone: phone })
+        .dispatch('order/attend', { email: email })
         .then(() => {
           this.loading = false
         })
